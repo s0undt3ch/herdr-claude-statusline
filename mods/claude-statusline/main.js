@@ -35,20 +35,25 @@ export default class ClaudeStatusline extends View {
       cx.notify();
       for (;;) {
         try {
-          if (!this.configDir) throw new Error("no config dir");
+          if (!this.configDir || !this.binary) throw new Error("no state dir");
           await watchFolder(
             `${stateDir(this.binary ?? "", this.configDir)}/cache`,
           );
         } catch {
           await cx.sleep(60000);
         }
+        // one cache write fires several events; this also bounds every pass
+        await cx.sleep(1000);
         await this.refresh();
         cx.notify();
       }
     });
     // ok flips to false at reset without a cache write
     cx.timer.every(60000, (cx) => {
-      this.refresh().then(() => cx.notify());
+      cx.spawn(async (cx) => {
+        await this.refresh();
+        cx.notify();
+      });
     });
   }
 
@@ -60,7 +65,7 @@ export default class ClaudeStatusline extends View {
     for (const c of list) {
       const bare = !c.includes("/");
       const r = bare
-        ? await exec("sh", ["-c", `command -v ${c}`])
+        ? await exec("sh", ["-c", 'command -v "$1"', "sh", c])
         : await exec("test", ["-x", c]);
       if (r.code === 0) {
         this.binary = bare ? r.stdout.trim() || c : c;
