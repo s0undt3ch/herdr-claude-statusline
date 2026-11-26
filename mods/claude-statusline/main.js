@@ -15,6 +15,7 @@ export default class ClaudeStatusline extends View {
     this.data = null;
     this.error = null;
     this.binary = null;
+    this.propBinary = undefined;
     this.configDir = null;
     if (checking()) {
       this.data = {
@@ -54,7 +55,8 @@ export default class ClaudeStatusline extends View {
   async resolve() {
     const env = await exec("sh", ["-c", 'printf %s "$CLAUDE_CONFIG_DIR"']);
     this.configDir = configDirFrom(env.stdout ?? "", home());
-    const list = candidates(props()?.binary, this.configDir);
+    this.propBinary = props()?.binary;
+    const list = candidates(this.propBinary, this.configDir);
     for (const c of list) {
       const bare = !c.includes("/");
       const r = bare
@@ -71,6 +73,8 @@ export default class ClaudeStatusline extends View {
 
   async refresh() {
     try {
+      if (this.binary && props()?.binary !== this.propBinary)
+        this.binary = null;
       if (!this.binary) await this.resolve();
       if (!this.binary) return;
       const r = await exec(this.binary, ["rate-bars", "--data"], {
@@ -79,6 +83,7 @@ export default class ClaudeStatusline extends View {
       if (r.code !== 0) {
         this.error = describeFailure({ code: r.code, stderr: r.stderr ?? "" });
         this.data = null;
+        this.binary = null;
         return;
       }
       this.data = parseData(r.stdout);
