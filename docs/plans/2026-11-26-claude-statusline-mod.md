@@ -78,6 +78,27 @@ git add package.json mods/claude-statusline/core.js tests/core.test.js
 git commit -m "feat: parse rate-bars data into bar models"
 ```
 
+### Task 1b: Repo tooling (mise, prek, pre-commit)
+
+Added mid-run at the user's request.
+
+**Files:**
+- Create: `mise.toml`: `[tools]` pins `node = "26.13.1"`, `prek = "0.5.11"`, `biome = "2.6.9"`. `[tasks.test]` runs `npm test`. `[tasks.check]` runs `herdr-app check mods/claude-statusline`.
+- Create: `.pre-commit-config.yaml`, prek-compatible:
+  - `pre-commit/pre-commit-hooks`: `trailing-whitespace`, `end-of-file-fixer`, `check-json`, `check-yaml`, `check-merge-conflict`, `check-added-large-files`
+  - local `biome check --write` on `*.js`/`*.json` (`language: system`)
+  - local `node-test`: `npm test` (`pass_filenames: false`, files `\.js$`)
+  - local `herdr-check`: `sh -c 'command -v herdr-app >/dev/null || exit 0; herdr-app check mods/claude-statusline'` (`pass_filenames: false`, files `^mods/`)
+- Create: `biome.json`: format and lint `mods/` and `tests/`, 2-space indent, double quotes (match `workspace-status`).
+- Modify: existing JS only as `biome check --write` reformats it.
+
+**Interfaces:**
+- Produces: `mise run test`, `mise run check`; hooks installed with `prek install`.
+
+- [ ] **Step 1:** Write the three files. Run `mise install`, then `prek install`.
+- [ ] **Step 2: Verify** with `prek run --all-files`. Expected: every hook passes. `herdr-check` passes or skips.
+- [ ] **Step 3: Commit** `chore: add mise, prek and biome tooling` (through the hooks).
+
 ### Task 2: Binary candidates and state dir
 
 **Files:**
