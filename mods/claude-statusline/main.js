@@ -66,6 +66,7 @@ export default class ClaudeStatusline extends View {
       }
     }
     this.error = "claude-statusline not found";
+    this.data = null;
   }
 
   async refresh() {
@@ -77,12 +78,14 @@ export default class ClaudeStatusline extends View {
       });
       if (r.code !== 0) {
         this.error = describeFailure({ code: r.code, stderr: r.stderr ?? "" });
+        this.data = null;
         return;
       }
       this.data = parseData(r.stdout);
       this.error = null;
     } catch (e) {
       this.error = e instanceof Error ? e.message : String(e);
+      this.data = null;
       this.binary = null;
     }
   }
