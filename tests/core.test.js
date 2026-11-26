@@ -4,6 +4,7 @@ import {
   barModel,
   candidates,
   configDirFrom,
+  describeFailure,
   formatReset,
   parseData,
   stateDir,
@@ -143,3 +144,14 @@ test("config dir default", () => {
 function pick(m) {
   return { fill: m.fill, marker: m.marker, colour: m.colour, dim: m.dim };
 }
+
+test("describes a failed run", () => {
+  assert.equal(
+    describeFailure({ code: 2, stderr: "\n--data takes no other flags\nmore" }),
+    "claude-statusline failed (exit 2): --data takes no other flags",
+  );
+  assert.equal(
+    describeFailure({ code: 1, stderr: "" }),
+    "claude-statusline failed (exit 1)",
+  );
+});

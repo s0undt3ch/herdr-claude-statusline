@@ -68,3 +68,8 @@ export function barModel(label, rate, t, nowSec, error) {
     tooltip: `${label}: ${rate.used}% used, pace ${rate.target}%, resets ${formatReset(rate.resets_at, nowSec)}`,
   };
 }
+
+export function describeFailure({ code, stderr }) {
+  const first = stderr.split("\n").find((l) => l.trim() !== "");
+  return `claude-statusline failed (exit ${code})${first ? `: ${first.trim()}` : ""}`;
+}
