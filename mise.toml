@@ -1,0 +1,10 @@
+[tools]
+node = "26.13.1"
+prek = "0.5.11"
+biome = "2.6.9"
+
+[tasks.test]
+run = "npm test"
+
+[tasks.check]
+run = "herdr-app check mods/claude-statusline"

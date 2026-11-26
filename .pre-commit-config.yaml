@@ -1,0 +1,29 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-json
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+  - repo: local
+    hooks:
+      - id: biome
+        name: biome check
+        entry: biome check --write --no-errors-on-unmatched
+        language: system
+        files: \.(js|json)$
+      - id: node-test
+        name: node test
+        entry: npm test
+        language: system
+        pass_filenames: false
+        files: \.js$
+      - id: herdr-check
+        name: herdr-app check
+        entry: sh -c 'command -v herdr-app >/dev/null || exit 0; test -f mods/claude-statusline/main.js || exit 0; herdr-app check mods/claude-statusline'
+        language: system
+        pass_filenames: false
+        files: ^mods/

@@ -1,12 +1,22 @@
-import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseData, barModel, formatReset } from "../mods/claude-statusline/core.js";
+import { test } from "node:test";
+import {
+  barModel,
+  formatReset,
+  parseData,
+} from "../mods/claude-statusline/core.js";
 
 const t = { done: "D", ansi3: "Y", blocked: "B", dim: "M" };
 const now = 1764158400;
 
 const reading = {
-  rate5h: { ok: true, used: 75, target: 50, state: "warn", resets_at: 1760009000 },
+  rate5h: {
+    ok: true,
+    used: 75,
+    target: 50,
+    state: "warn",
+    resets_at: 1760009000,
+  },
   rate7d: { ok: false },
 };
 const json = JSON.stringify(reading);
@@ -26,17 +36,30 @@ test("rejects junk", () => {
 });
 
 test("maps state to colour", () => {
-  const rate = (state) => ({ ok: true, used: 8, target: 54, state, resets_at: now + 3600 });
-  assert.deepEqual(
-    pick(barModel("5h", rate("bad"), t, now)),
-    { fill: 8, marker: 54, colour: "B", dim: false },
-  );
+  const rate = (state) => ({
+    ok: true,
+    used: 8,
+    target: 54,
+    state,
+    resets_at: now + 3600,
+  });
+  assert.deepEqual(pick(barModel("5h", rate("bad"), t, now)), {
+    fill: 8,
+    marker: 54,
+    colour: "B",
+    dim: false,
+  });
   assert.equal(barModel("5h", rate("good"), t, now).colour, "D");
   assert.equal(barModel("5h", rate("warn"), t, now).colour, "Y");
 });
 
 test("clamps out-of-range percentages", () => {
-  const m = barModel("5h", { ok: true, used: 130, target: -5, state: "bad", resets_at: now + 3600 }, t, now);
+  const m = barModel(
+    "5h",
+    { ok: true, used: 130, target: -5, state: "bad", resets_at: now + 3600 },
+    t,
+    now,
+  );
   assert.equal(m.fill, 100);
   assert.equal(m.marker, 0);
   assert.match(m.tooltip, /130%/);
@@ -58,7 +81,12 @@ test("error is dim with reason", () => {
 });
 
 test("tooltip text", () => {
-  const m = barModel("5h", { ok: true, used: 8, target: 54, state: "bad", resets_at: now + 3600 }, t, now);
+  const m = barModel(
+    "5h",
+    { ok: true, used: 8, target: 54, state: "bad", resets_at: now + 3600 },
+    t,
+    now,
+  );
   assert.equal(m.tooltip, "5h: 8% used, pace 54%, resets 13:00");
 });
 

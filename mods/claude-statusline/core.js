@@ -9,7 +9,8 @@ export function parseData(stdout) {
   } catch {
     throw fail();
   }
-  if (!data || typeof data !== "object" || !data.rate5h || !data.rate7d) throw fail();
+  if (!data || typeof data !== "object" || !data.rate5h || !data.rate7d)
+    throw fail();
   return { rate5h: data.rate5h, rate7d: data.rate7d };
 }
 
@@ -31,7 +32,7 @@ export function barModel(label, rate, t, nowSec, error) {
       marker: null,
       colour: t.dim,
       dim: true,
-      tooltip: `${label}: ${rate ? "no reading" : error ?? "no reading"}`,
+      tooltip: `${label}: ${rate ? "no reading" : (error ?? "no reading")}`,
     };
   }
   const colours = { good: t.done, warn: t.ansi3, bad: t.blocked };
