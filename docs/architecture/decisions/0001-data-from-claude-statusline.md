@@ -7,6 +7,7 @@
 
 - 2026-11-26: Proposed
 - 2026-11-26: Accepted
+- 2026-11-26: claude-statusline v0.16.0 released with rate-bars --data
 
 ## Context
 
