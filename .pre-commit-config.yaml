@@ -27,13 +27,9 @@ repos:
         language: system
         pass_filenames: false
         files: ^mods/
-      - id: actionlint
-        name: actionlint
-        entry: actionlint
-        language: system
-        files: ^\.github/workflows/.*\.ya?ml$
+  - repo: https://github.com/s0undt3ch/pre-commit-hooks
+    rev: v1.6.0
+    hooks:
+      - id: jactionlint
       - id: shellcheck
-        name: shellcheck
-        entry: shellcheck
-        language: system
-        types: [shell]
+      - id: pin-github-actions
