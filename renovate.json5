@@ -1,0 +1,15 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    "helpers:pinGitHubActionDigests",
+    ":semanticCommits",
+  ],
+  "pre-commit": { enabled: true },
+  packageRules: [
+    {
+      matchManagers: ["mise", "pre-commit", "github-actions"],
+      groupName: "dev tooling",
+    },
+  ],
+}
