@@ -34,7 +34,7 @@ Each bar has a fill for usage and a 2px marker for an even pace. Green, yellow a
        "content": { "mod": "claude-statusline" } } ] }
    ```
 
-4. `layout.clone` already switched you to the clone. To come back to it later, run `herdr-app do layout.switch '{"name":"main-usage"}'` or use the layout switcher (`ctrl-shift-l` by default).
+4. `layout.clone` already switched you to the clone. To come back to it later, run `herdr-app do layout.switch '{"name":"main-usage"}'` or press `ctrl-shift-l` (by default) to cycle to it.
 
 The bars sit at the far right of the bottom bar, after Herdr's own items.
 
@@ -52,7 +52,7 @@ The mod uses the first of these that exists:
 ## Good to know
 
 - The bars refresh every 60 seconds and whenever claude-statusline's cache changes.
-- If the binary is missing or too old, the bars show empty and the tooltip says why. They recover on their own once a working binary appears.
+- If the binary is missing or too old, the bars show empty and the tooltip says why. They recover on their own once a working binary appears. A too-old binary that comes earlier in the lookup order wins every time, so update that copy or set the `binary` prop.
 - Light usage early in a window shows red. That matches the terminal status line.
 
 More in [RECIPE.md](RECIPE.md) and [docs/architecture/](docs/architecture/overview.md).

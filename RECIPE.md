@@ -51,6 +51,7 @@ Two small usage bars at the right end of Herdr's bottom bar: `5h` and `7d`, for 
 - `ok` flips to `false` when a window resets, without any cache write. That is why the 60 second timer exists. Without it the bar keeps showing the old window.
 - A claude-statusline without `--data` (0.15.0 and earlier) exits 2. The bars show empty with the failure in the tooltip.
 - After a failed run or a changed `binary` prop, the mod looks the binary up again on the next refresh.
+- An existing binary that is too old and sits earlier in the lookup order wins every re-resolve, for example a 0.15.0 plugin copy beats a 0.16.0 binary on `PATH`. The bars stay dim until you update that copy or set the `binary` prop.
 - The block sits after the palette hint and cannot go between Herdr's own items.
 - It copies the stock bar's look. If Herdr restyles `workspace-status`, adjust the colours and border to match.
 - Herdr's GUI gets `CLAUDE_CONFIG_DIR` from launchd. Set it there, or use the `binary` prop.
