@@ -34,7 +34,7 @@ Each bar has a fill for usage and a 2px marker for an even pace. Green, yellow a
        "content": { "mod": "claude-statusline" } } ] }
    ```
 
-4. Switch to it with `layout.switch` or `ctrl-shift-l`.
+4. `layout.clone` already switched you to the clone. To come back to it later, run `herdr-app do layout.switch '{"name":"main-usage"}'` or use the layout switcher (`ctrl-shift-l` by default).
 
 The bars sit at the far right of the bottom bar, after Herdr's own items.
 
