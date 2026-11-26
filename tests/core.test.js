@@ -2,8 +2,11 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   barModel,
+  candidates,
+  configDirFrom,
   formatReset,
   parseData,
+  stateDir,
 } from "../mods/claude-statusline/core.js";
 
 const t = { done: "D", ansi3: "Y", blocked: "B", dim: "M" };
@@ -26,8 +29,8 @@ test("parses a full reading", () => {
 });
 
 test("parses only the first line", () => {
-  assert.deepEqual(parseData(json + "\n\n"), reading);
-  assert.deepEqual(parseData(json + "\nnoise"), reading);
+  assert.deepEqual(parseData(`${json}\n\n`), reading);
+  assert.deepEqual(parseData(`${json}\nnoise`), reading);
 });
 
 test("rejects junk", () => {
@@ -96,6 +99,45 @@ test("past reset says now", () => {
 
 test("far reset shows weekday", () => {
   assert.equal(formatReset(now + 3 * 86400, now), "Sat 12:00");
+});
+
+test("candidates order", () => {
+  assert.deepEqual(candidates(undefined, "/h/.claude-work"), [
+    "/h/.claude-work/plugins/data/statusline-claude-statusline/bin/claude-statusline",
+    "/h/.claude-work/claude-statusline/claude-statusline",
+    "claude-statusline",
+  ]);
+});
+
+test("candidates puts the prop first and skips an empty prop", () => {
+  assert.equal(candidates("/opt/cs", "/h/.c")[0], "/opt/cs");
+  assert.deepEqual(candidates("", "/h/.c"), candidates(undefined, "/h/.c"));
+});
+
+test("state dir for plugin binary", () => {
+  assert.equal(
+    stateDir(
+      "/h/.c/plugins/data/statusline-claude-statusline/bin/claude-statusline",
+      "/h/.c",
+    ),
+    "/h/.c/plugins/data/statusline-claude-statusline",
+  );
+});
+
+test("state dir otherwise", () => {
+  assert.equal(
+    stateDir("/h/.c/claude-statusline/claude-statusline", "/h/.c"),
+    "/h/.c/claude-statusline",
+  );
+  assert.equal(
+    stateDir("/usr/local/bin/claude-statusline", "/h/.c"),
+    "/h/.c/claude-statusline",
+  );
+});
+
+test("config dir default", () => {
+  assert.equal(configDirFrom("", "/h"), "/h/.claude");
+  assert.equal(configDirFrom("/h/.claude-work/\n", "/h"), "/h/.claude-work");
 });
 
 function pick(m) {

@@ -25,8 +25,32 @@ export function formatReset(resetsAt, nowSec) {
   return diff < 86400 ? hhmm : `${DAYS[d.getDay()]} ${hhmm}`;
 }
 
+export function candidates(propBinary, configDir) {
+  const list = propBinary ? [propBinary] : [];
+  list.push(
+    `${configDir}/plugins/data/statusline-claude-statusline/bin/claude-statusline`,
+    `${configDir}/claude-statusline/claude-statusline`,
+    "claude-statusline",
+  );
+  return list;
+}
+
+const PLUGIN_DATA = "plugins/data/statusline-claude-statusline";
+
+export function stateDir(binary, configDir) {
+  const pluginDir = `${configDir}/${PLUGIN_DATA}`;
+  return binary.startsWith(`${pluginDir}/`)
+    ? pluginDir
+    : `${configDir}/claude-statusline`;
+}
+
+export function configDirFrom(envValue, home) {
+  const value = envValue.trim() || `${home}/.claude`;
+  return value.replace(/\/$/, "");
+}
+
 export function barModel(label, rate, t, nowSec, error) {
-  if (!rate || !rate.ok) {
+  if (!rate?.ok) {
     return {
       fill: 0,
       marker: null,
